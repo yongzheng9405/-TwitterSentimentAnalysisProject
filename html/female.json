@@ -1,0 +1,356 @@
+[
+  {
+    "id": 1,
+    "Female": 0.52,
+    "state": "Alabama",
+    "rank": 1
+  },
+  {
+    "id": 11,
+    "Female": 0.52,
+    "state": "District of Columbia",
+    "rank": 2
+  },
+  {
+    "id": 12,
+    "Female": 0.52,
+    "state": "Florida",
+    "rank": 3
+  },
+  {
+    "id": 13,
+    "Female": 0.52,
+    "state": "Georgia",
+    "rank": 4
+  },
+  {
+    "id": 22,
+    "Female": 0.52,
+    "state": "Louisiana",
+    "rank": 5
+  },
+  {
+    "id": 24,
+    "Female": 0.52,
+    "state": "Maryland",
+    "rank": 6
+  },
+  {
+    "id": 28,
+    "Female": 0.52,
+    "state": "Mississippi",
+    "rank": 7
+  },
+  {
+    "id": 33,
+    "Female": 0.52,
+    "state": "New Hampshire",
+    "rank": 8
+  },
+  {
+    "id": 37,
+    "Female": 0.52,
+    "state": "North Carolina",
+    "rank": 9
+  },
+  {
+    "id": 44,
+    "Female": 0.52,
+    "state": "Rhode Island",
+    "rank": 10
+  },
+  {
+    "id": 45,
+    "Female": 0.52,
+    "state": "South Carolina",
+    "rank": 11
+  },
+  {
+    "id": 50,
+    "Female": 0.52,
+    "state": "Vermont",
+    "rank": 12
+  },
+  {
+    "id": 4,
+    "Female": 0.51,
+    "state": "Arizona",
+    "rank": 13
+  },
+  {
+    "id": 5,
+    "Female": 0.51,
+    "state": "Arkansas",
+    "rank": 14
+  },
+  {
+    "id": 9,
+    "Female": 0.51,
+    "state": "Connecticut",
+    "rank": 15
+  },
+  {
+    "id": 10,
+    "Female": 0.51,
+    "state": "Delaware",
+    "rank": 16
+  },
+  {
+    "id": 15,
+    "Female": 0.51,
+    "state": "Hawaii",
+    "rank": 17
+  },
+  {
+    "id": 17,
+    "Female": 0.51,
+    "state": "Illinois",
+    "rank": 18
+  },
+  {
+    "id": 18,
+    "Female": 0.51,
+    "state": "Indiana",
+    "rank": 19
+  },
+  {
+    "id": 20,
+    "Female": 0.51,
+    "state": "Kansas",
+    "rank": 20
+  },
+  {
+    "id": 21,
+    "Female": 0.51,
+    "state": "Kentucky",
+    "rank": 21
+  },
+  {
+    "id": 25,
+    "Female": 0.51,
+    "state": "Massachusetts",
+    "rank": 22
+  },
+  {
+    "id": 26,
+    "Female": 0.51,
+    "state": "Michigan",
+    "rank": 23
+  },
+  {
+    "id": 29,
+    "Female": 0.51,
+    "state": "Missouri",
+    "rank": 24
+  },
+  {
+    "id": 31,
+    "Female": 0.51,
+    "state": "Nebraska",
+    "rank": 25
+  },
+  {
+    "id": 32,
+    "Female": 0.51,
+    "state": "Nevada",
+    "rank": 26
+  },
+  {
+    "id": 34,
+    "Female": 0.51,
+    "state": "New Jersey",
+    "rank": 27
+  },
+  {
+    "id": 35,
+    "Female": 0.51,
+    "state": "New Mexico",
+    "rank": 28
+  },
+  {
+    "id": 36,
+    "Female": 0.51,
+    "state": "New York",
+    "rank": 29
+  },
+  {
+    "id": 39,
+    "Female": 0.51,
+    "state": "Ohio",
+    "rank": 30
+  },
+  {
+    "id": 41,
+    "Female": 0.51,
+    "state": "Oregon",
+    "rank": 31
+  },
+  {
+    "id": 42,
+    "Female": 0.51,
+    "state": "Pennsylvania",
+    "rank": 32
+  },
+  {
+    "id": 47,
+    "Female": 0.51,
+    "state": "Tennessee",
+    "rank": 33
+  },
+  {
+    "id": 48,
+    "Female": 0.51,
+    "state": "Texas",
+    "rank": 34
+  },
+  {
+    "id": 51,
+    "Female": 0.51,
+    "state": "Virginia",
+    "rank": 35
+  },
+  {
+    "id": 54,
+    "Female": 0.51,
+    "state": "West Virginia",
+    "rank": 36
+  },
+  {
+    "id": 6,
+    "Female": 0.5,
+    "state": "California",
+    "rank": 37
+  },
+  {
+    "id": 8,
+    "Female": 0.5,
+    "state": "Colorado",
+    "rank": 38
+  },
+  {
+    "id": 16,
+    "Female": 0.5,
+    "state": "Idaho",
+    "rank": 39
+  },
+  {
+    "id": 19,
+    "Female": 0.5,
+    "state": "Iowa",
+    "rank": 40
+  },
+  {
+    "id": 23,
+    "Female": 0.5,
+    "state": "Maine",
+    "rank": 41
+  },
+  {
+    "id": 27,
+    "Female": 0.5,
+    "state": "Minnesota",
+    "rank": 42
+  },
+  {
+    "id": 30,
+    "Female": 0.5,
+    "state": "Montana",
+    "rank": 43
+  },
+  {
+    "id": 40,
+    "Female": 0.5,
+    "state": "Oklahoma",
+    "rank": 44
+  },
+  {
+    "id": 46,
+    "Female": 0.5,
+    "state": "South Dakota",
+    "rank": 45
+  },
+  {
+    "id": 49,
+    "Female": 0.5,
+    "state": "Utah",
+    "rank": 46
+  },
+  {
+    "id": 53,
+    "Female": 0.5,
+    "state": "Washington",
+    "rank": 47
+  },
+  {
+    "id": 55,
+    "Female": 0.5,
+    "state": "Wisconsin",
+    "rank": 48
+  },
+  {
+    "id": 56,
+    "Female": 0.5,
+    "state": "Wyoming",
+    "rank": 49
+  },
+  {
+    "id": 2,
+    "Female": 0.49,
+    "state": "Alaska",
+    "rank": 50
+  },
+  {
+    "id": 38,
+    "Female": 0.48,
+    "state": "North Dakota",
+    "rank": 51
+  },
+  {
+    "id": 60,
+    "Female": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 64,
+    "Female": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 66,
+    "Female": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 68,
+    "Female": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 69,
+    "Female": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 70,
+    "Female": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 72,
+    "Female": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 78,
+    "Female": 0,
+    "state": "null",
+    "rank": 0
+  }
+]

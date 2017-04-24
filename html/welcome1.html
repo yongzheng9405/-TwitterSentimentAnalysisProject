@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <link rel = "shortcut icon" href="">
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+    <script src="lib/jquery.csv.js"></script>
+    <link rel = "stylesheet" type="text/css" href="../css/test.css">
+    <style>
+         body {
+                background: #555 url("../img/USA4.png");
+                font: 13px 'Lucida sans', Arial, Helvetica;
+                color: #eee;
+                background-size: 840px 600px;
+                background-position: 50% -20%;
+                background-color:white;
+                text-align: center;
+                background-repeat: no-repeat;
+            }
+    </style>
+
+
+
+    <script>
+        $.ajax({
+            url: "../data/inputSuggest.csv",
+            aync: false,
+            success: function(csvFile) {
+                data = $.csv.toArrays(csvFile);
+            },
+            dataType: "text",
+            complete: function() {
+                var suggestions = [];
+
+                for (var i = 0; i < data.length; i++) {
+                    console.log(data[i][0]);
+                    suggestions.push(data[i][0]);
+                }
+                $.ui.autocomplete.prototype._renderItem = function (ul, item) {
+                    var re = new RegExp($.trim(this.term.toLowerCase()));
+                    var t = item.label.replace(re, "<span style='font-weight:600;color:#5C5C5C;'>" + $.trim(this.term.toLowerCase()) +
+                        "</span>");
+                    return $("<li></li>")
+                        .data("item.autocomplete", item)
+                        .append("<a>" + t + "</a>")
+                        .appendTo(ul);
+                };
+                $("#sfield").autocomplete({
+                    source:suggestions,
+                    messages: {
+                        noResults: "",
+                        results: function() {}
+                    }
+                });
+            }
+        });
+    </script>
+
+<head>
+
+
+<form class="form-wrapper cf" action = "../php/welcome.php" method = "GET">
+    <input id = "sfield" name = "sfield" type="text" placeholder="Search here..." required>
+    <button type="submit">Search</button>
+</form>

@@ -1,0 +1,356 @@
+[
+  {
+    "id": 24,
+    "income": 65144,
+    "state": "Maryland",
+    "rank": 1
+  },
+  {
+    "id": 34,
+    "income": 64470,
+    "state": "New Jersey",
+    "rank": 2
+  },
+  {
+    "id": 9,
+    "income": 63422,
+    "state": "Connecticut",
+    "rank": 3
+  },
+  {
+    "id": 15,
+    "income": 61160,
+    "state": "Hawaii",
+    "rank": 4
+  },
+  {
+    "id": 25,
+    "income": 59963,
+    "state": "Massachusetts",
+    "rank": 5
+  },
+  {
+    "id": 33,
+    "income": 59683,
+    "state": "New Hampshire",
+    "rank": 6
+  },
+  {
+    "id": 2,
+    "income": 59393,
+    "state": "Alaska",
+    "rank": 7
+  },
+  {
+    "id": 6,
+    "income": 56645,
+    "state": "California",
+    "rank": 8
+  },
+  {
+    "id": 51,
+    "income": 56277,
+    "state": "Virginia",
+    "rank": 9
+  },
+  {
+    "id": 27,
+    "income": 54023,
+    "state": "Minnesota",
+    "rank": 10
+  },
+  {
+    "id": 32,
+    "income": 52998,
+    "state": "Nevada",
+    "rank": 11
+  },
+  {
+    "id": 10,
+    "income": 52833,
+    "state": "Delaware",
+    "rank": 12
+  },
+  {
+    "id": 53,
+    "income": 52583,
+    "state": "Washington",
+    "rank": 13
+  },
+  {
+    "id": 8,
+    "income": 52015,
+    "state": "Colorado",
+    "rank": 14
+  },
+  {
+    "id": 17,
+    "income": 52006,
+    "state": "Illinois",
+    "rank": 15
+  },
+  {
+    "id": 11,
+    "income": 51847,
+    "state": "District of Columbia",
+    "rank": 16
+  },
+  {
+    "id": 44,
+    "income": 51814,
+    "state": "Rhode Island",
+    "rank": 17
+  },
+  {
+    "id": 36,
+    "income": 51384,
+    "state": "New York",
+    "rank": 18
+  },
+  {
+    "id": 49,
+    "income": 51309,
+    "state": "Utah",
+    "rank": 19
+  },
+  {
+    "id": 55,
+    "income": 48772,
+    "state": "Wisconsin",
+    "rank": 20
+  },
+  {
+    "id": 50,
+    "income": 47665,
+    "state": "Vermont",
+    "rank": 21
+  },
+  {
+    "id": 56,
+    "income": 47423,
+    "state": "Wyoming",
+    "rank": 22
+  },
+  {
+    "id": 4,
+    "income": 47265,
+    "state": "Arizona",
+    "rank": 23
+  },
+  {
+    "id": 26,
+    "income": 47182,
+    "state": "Michigan",
+    "rank": 24
+  },
+  {
+    "id": 13,
+    "income": 46832,
+    "state": "Georgia",
+    "rank": 25
+  },
+  {
+    "id": 42,
+    "income": 46259,
+    "state": "Pennsylvania",
+    "rank": 26
+  },
+  {
+    "id": 41,
+    "income": 46230,
+    "state": "Oregon",
+    "rank": 27
+  },
+  {
+    "id": 12,
+    "income": 45495,
+    "state": "Florida",
+    "rank": 28
+  },
+  {
+    "id": 20,
+    "income": 45478,
+    "state": "Kansas",
+    "rank": 29
+  },
+  {
+    "id": 31,
+    "income": 45474,
+    "state": "Nebraska",
+    "rank": 30
+  },
+  {
+    "id": 18,
+    "income": 45394,
+    "state": "Indiana",
+    "rank": 31
+  },
+  {
+    "id": 48,
+    "income": 44922,
+    "state": "Texas",
+    "rank": 32
+  },
+  {
+    "id": 39,
+    "income": 44532,
+    "state": "Ohio",
+    "rank": 33
+  },
+  {
+    "id": 19,
+    "income": 44491,
+    "state": "Iowa",
+    "rank": 34
+  },
+  {
+    "id": 23,
+    "income": 43439,
+    "state": "Maine",
+    "rank": 35
+  },
+  {
+    "id": 16,
+    "income": 42865,
+    "state": "Idaho",
+    "rank": 36
+  },
+  {
+    "id": 29,
+    "income": 42841,
+    "state": "Missouri",
+    "rank": 37
+  },
+  {
+    "id": 46,
+    "income": 42791,
+    "state": "South Dakota",
+    "rank": 38
+  },
+  {
+    "id": 37,
+    "income": 42625,
+    "state": "North Carolina",
+    "rank": 39
+  },
+  {
+    "id": 38,
+    "income": 41919,
+    "state": "North Dakota",
+    "rank": 40
+  },
+  {
+    "id": 45,
+    "income": 41100,
+    "state": "South Carolina",
+    "rank": 41
+  },
+  {
+    "id": 35,
+    "income": 40629,
+    "state": "New Mexico",
+    "rank": 42
+  },
+  {
+    "id": 30,
+    "income": 40627,
+    "state": "Montana",
+    "rank": 43
+  },
+  {
+    "id": 47,
+    "income": 40315,
+    "state": "Tennessee",
+    "rank": 44
+  },
+  {
+    "id": 21,
+    "income": 39372,
+    "state": "Kentucky",
+    "rank": 45
+  },
+  {
+    "id": 22,
+    "income": 39337,
+    "state": "Louisiana",
+    "rank": 46
+  },
+  {
+    "id": 1,
+    "income": 38783,
+    "state": "Alabama",
+    "rank": 47
+  },
+  {
+    "id": 40,
+    "income": 38770,
+    "state": "Oklahoma",
+    "rank": 48
+  },
+  {
+    "id": 5,
+    "income": 36599,
+    "state": "Arkansas",
+    "rank": 49
+  },
+  {
+    "id": 54,
+    "income": 35059,
+    "state": "West Virginia",
+    "rank": 50
+  },
+  {
+    "id": 28,
+    "income": 34473,
+    "state": "Mississippi",
+    "rank": 51
+  },
+  {
+    "id": 72,
+    "income": 17621,
+    "state": "Puerto Rico",
+    "rank": 52
+  },
+  {
+    "id": 60,
+    "income": 0,
+    "state": "",
+    "rank": 0
+  },
+  {
+    "id": 64,
+    "income": 0,
+    "state": "",
+    "rank": 0
+  },
+  {
+    "id": 66,
+    "income": 0,
+    "state": "",
+    "rank": 0
+  },
+  {
+    "id": 68,
+    "income": 0,
+    "state": "",
+    "rank": 0
+  },
+  {
+    "id": 69,
+    "income": 0,
+    "state": "",
+    "rank": 0
+  },
+  {
+    "id": 70,
+    "income": 0,
+    "state": "",
+    "rank": 0
+  },
+  {
+    "id": 78,
+    "income": 0,
+    "state": "",
+    "rank": 0
+  }
+]

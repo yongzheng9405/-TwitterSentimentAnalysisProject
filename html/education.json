@@ -1,0 +1,356 @@
+[
+  {
+    "id": 60,
+    "education": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 64,
+    "education": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 66,
+    "education": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 68,
+    "education": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 69,
+    "education": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 70,
+    "education": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 72,
+    "education": 0,
+    "state": "Puerto Rico",
+    "rank": 0
+  },
+  {
+    "id": 78,
+    "education": 0,
+    "state": "null",
+    "rank": 0
+  },
+  {
+    "id": 54,
+    "education": 17.5,
+    "state": "West Virginia",
+    "rank": 1
+  },
+  {
+    "id": 5,
+    "education": 19.5,
+    "state": "Arkansas",
+    "rank": 2
+  },
+  {
+    "id": 28,
+    "education": 19.5,
+    "state": "Mississippi",
+    "rank": 3
+  },
+  {
+    "id": 21,
+    "education": 20.5,
+    "state": "Kentucky",
+    "rank": 4
+  },
+  {
+    "id": 22,
+    "education": 21.4,
+    "state": "Louisiana",
+    "rank": 5
+  },
+  {
+    "id": 32,
+    "education": 21.7,
+    "state": "Nevada",
+    "rank": 6
+  },
+  {
+    "id": 1,
+    "education": 21.9,
+    "state": "Alabama",
+    "rank": 7
+  },
+  {
+    "id": 18,
+    "education": 22.7,
+    "state": "Indiana",
+    "rank": 8
+  },
+  {
+    "id": 40,
+    "education": 22.9,
+    "state": "Oklahoma",
+    "rank": 9
+  },
+  {
+    "id": 47,
+    "education": 23.1,
+    "state": "Tennessee",
+    "rank": 10
+  },
+  {
+    "id": 56,
+    "education": 24.1,
+    "state": "Wyoming",
+    "rank": 11
+  },
+  {
+    "id": 16,
+    "education": 24.4,
+    "state": "Idaho",
+    "rank": 12
+  },
+  {
+    "id": 45,
+    "education": 24.5,
+    "state": "South Carolina",
+    "rank": 13
+  },
+  {
+    "id": 39,
+    "education": 24.6,
+    "state": "Ohio",
+    "rank": 14
+  },
+  {
+    "id": 19,
+    "education": 24.9,
+    "state": "Iowa",
+    "rank": 15
+  },
+  {
+    "id": 35,
+    "education": 25,
+    "state": "New Mexico",
+    "rank": 16
+  },
+  {
+    "id": 26,
+    "education": 25.2,
+    "state": "Michigan",
+    "rank": 17
+  },
+  {
+    "id": 29,
+    "education": 25.6,
+    "state": "Missouri",
+    "rank": 18
+  },
+  {
+    "id": 12,
+    "education": 25.8,
+    "state": "Florida",
+    "rank": 19
+  },
+  {
+    "id": 4,
+    "education": 25.9,
+    "state": "Arizona",
+    "rank": 20
+  },
+  {
+    "id": 48,
+    "education": 25.9,
+    "state": "Texas",
+    "rank": 21
+  },
+  {
+    "id": 46,
+    "education": 26.3,
+    "state": "South Dakota",
+    "rank": 22
+  },
+  {
+    "id": 55,
+    "education": 26.3,
+    "state": "Wisconsin",
+    "rank": 23
+  },
+  {
+    "id": 37,
+    "education": 26.5,
+    "state": "North Carolina",
+    "rank": 24
+  },
+  {
+    "id": 23,
+    "education": 26.8,
+    "state": "Maine",
+    "rank": 25
+  },
+  {
+    "id": 42,
+    "education": 27.1,
+    "state": "Pennsylvania",
+    "rank": 26
+  },
+  {
+    "id": 13,
+    "education": 27.3,
+    "state": "Georgia",
+    "rank": 27
+  },
+  {
+    "id": 38,
+    "education": 27.6,
+    "state": "North Dakota",
+    "rank": 28
+  },
+  {
+    "id": 10,
+    "education": 27.8,
+    "state": "Delaware",
+    "rank": 29
+  },
+  {
+    "id": 2,
+    "education": 27.9,
+    "state": "Alaska",
+    "rank": 30
+  },
+  {
+    "id": 31,
+    "education": 28.6,
+    "state": "Nebraska",
+    "rank": 31
+  },
+  {
+    "id": 30,
+    "education": 28.8,
+    "state": "Montana",
+    "rank": 32
+  },
+  {
+    "id": 41,
+    "education": 28.8,
+    "state": "Oregon",
+    "rank": 33
+  },
+  {
+    "id": 49,
+    "education": 29.3,
+    "state": "Utah",
+    "rank": 34
+  },
+  {
+    "id": 15,
+    "education": 29.5,
+    "state": "Hawaii",
+    "rank": 35
+  },
+  {
+    "id": 20,
+    "education": 29.8,
+    "state": "Kansas",
+    "rank": 36
+  },
+  {
+    "id": 6,
+    "education": 30.1,
+    "state": "California",
+    "rank": 37
+  },
+  {
+    "id": 44,
+    "education": 30.2,
+    "state": "Rhode Island",
+    "rank": 38
+  },
+  {
+    "id": 17,
+    "education": 30.8,
+    "state": "Illinois",
+    "rank": 39
+  },
+  {
+    "id": 53,
+    "education": 31.1,
+    "state": "Washington",
+    "rank": 40
+  },
+  {
+    "id": 27,
+    "education": 31.8,
+    "state": "Minnesota",
+    "rank": 41
+  },
+  {
+    "id": 36,
+    "education": 32.5,
+    "state": "New York",
+    "rank": 42
+  },
+  {
+    "id": 33,
+    "education": 32.8,
+    "state": "New Hampshire",
+    "rank": 43
+  },
+  {
+    "id": 50,
+    "education": 33.6,
+    "state": "Vermont",
+    "rank": 44
+  },
+  {
+    "id": 51,
+    "education": 34.2,
+    "state": "Virginia",
+    "rank": 45
+  },
+  {
+    "id": 34,
+    "education": 35.4,
+    "state": "New Jersey",
+    "rank": 46
+  },
+  {
+    "id": 9,
+    "education": 35.5,
+    "state": "Connecticut",
+    "rank": 47
+  },
+  {
+    "id": 24,
+    "education": 36.1,
+    "state": "Maryland",
+    "rank": 48
+  },
+  {
+    "id": 8,
+    "education": 36.4,
+    "state": "Colorado",
+    "rank": 49
+  },
+  {
+    "id": 25,
+    "education": 39,
+    "state": "Massachusetts",
+    "rank": 50
+  },
+  {
+    "id": 11,
+    "education": 50.1,
+    "state": "District of Columbia",
+    "rank": 51
+  }
+]

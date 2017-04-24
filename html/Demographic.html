@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    .main text{
+        font: 1px font-weight;
+    }
+    .states {
+        fill: none;
+        stroke: #fff;
+        stroke-linejoin: round;
+    }
+    div.tooltip{
+        position: absolute;
+        text-align:center;
+        width: 150px;
+        height: 45px;
+        padding:2px;
+        font-size:11px;
+        background: black;
+        border:1px;
+        border-radius:3px;
+        pointer-events: none;
+        color: white;
+    }
+    .tile{
+        shape-rendering: crispEdges;
+        stroke-width: 2px;
+    }
+</style>
+
+<link rel = "shortcut icon" href="">
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+<script src="lib/jquery.csv.js"></script>
+<link rel = "stylesheet" type="text/css" href="../css/geocss.css">
+
+<form class="form-wrapper cf" action = "../php/welcome.php" method = "GET">
+    <input id = "sfield" name = "sfield" type="text" placeholder="Search here..." required>
+    <button type="submit">Search</button>
+</form>
+
+<svg width="1000" height="800"></svg>
+<script src="lib/d3.v3.min.js"></script>
+<script src="lib/d3.tip.v0.6.3.js"></script>
+<script src="lib/d3-queue.v3.min.js"></script>
+<script src="lib/topojson.v1.min.js"></script>
+
+
+<script>
+    $.ajax({
+        url: "../data/inputSuggest.csv",
+        aync: false,
+        success: function(csvFile) {
+            data = $.csv.toArrays(csvFile);
+        },
+        dataType: "text",
+        complete: function() {
+            var suggestions = [];
+            for (var i = 0; i < data.length; i++) {
+                suggestions.push(data[i][0]);
+            }
+            $.ui.autocomplete.prototype._renderItem = function (ul, item) {
+                var re = new RegExp($.trim(this.term.toLowerCase()));
+                var t = item.label.replace(re, "<span style='font-weight:300; color:#5C5C5C;'>" + $.trim(this.term.toLowerCase()) +
+                    "</span>");
+                return $("<li></li>")
+                    .data("item.autocomplete", item)
+                    .append("<a>" + t + "</a>")
+                    .appendTo(ul);
+            };
+            $("#sfield").autocomplete({
+                source:suggestions,
+                messages: {
+                    noResults: "",
+                    results: function() {}
+                }
+            });
+        }
+    });
+</script>
+
+
+<script>
+    var svg = d3.select("svg"),
+        width = +svg.attr("width"),
+        height = +svg.attr("height");
+
+    var div = d3.select("body")
+        .append("div")
+        .attr("class","tooltip")
+        .style("opacity",0);
+
+    d3.map();
+    var path = d3.geo.path();
+
+    var data = ["Sentiment","income","female","education","population"];
+
+    d3.select('body').append('select')
+        .on('change', update)
+        .selectAll('option')
+        .data(data)
+        .enter()
+        .append('option')
+        .attr('value',function(d){
+            return d;
+        })
+        .text(function (d) {
+            return d;
+        });
+
+    function update() {
+        var selectValue = d3.select('select').property('value');
+        drawmap(selectValue);
+    };
+
+
+    var svg4 = svg.append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("x", 0)
+        .attr("y", 200);
+
+    svg4.selectAll(".key").remove();
+
+    var topic_name;
+
+    d3.csv("../data/currentSearch.csv", function(topics) {
+        var objects = topics[0];
+        var list = Object.values(objects);
+        topic_name = list[0];
+
+        svg.append("text")
+            .attr("class","label")
+            .attr("x",350)
+            .attr("y",200)
+            .attr("font-size","28px","bold")
+            .text("US's Feeling on " + topic_name);
+
+        var new_topic_name = topic_name + ".json";
+        var new_reg_name = topic_name + "_reg.json";
+        console.log(new_topic_name);
+        
+        d3.json(new_reg_name,function(regression){
+
+            var i  = 5;
+            var text =[];
+            var num = [];
+            svg.append("rect")
+                .attr("height",80)
+                .attr("width",750)
+                .attr("x",95)
+                .attr("y",710)
+                .attr("fill","Azure");
+            for( var j =0; j < i; j++){
+                text[j] = regression[j].criteria;
+                num[j] = regression[j].r_values;
+                console.log(text[j],num[j]);
+                svg.append("text")
+                    .attr("class","label")
+                    .attr("x",100+j*150)
+                    .attr("y",750)
+                    .attr("font-size","13px","bold")
+                    .text(text[j]+":");
+                svg.append("text")
+                    .attr("class","label")
+                    .attr("x",100+j*150)
+                    .attr("y",765)
+                    .attr("font-size","13px","bold")
+                    .text(num[j]);
+
+            };
+            svg.append("text")
+                .attr("x",100)
+                .attr("y",730)
+                .attr("font-size","15px","bold")
+                .text("Regression Value with Following Data :");
+
+        });
+        d3.queue()
+            .defer(d3.json,"us.json")
+            .defer(d3.json, new_topic_name)
+            .defer(d3.json, "population.json")
+            .defer(d3.json, "income.json")
+            .defer(d3.json, "female.json")
+            .defer(d3.json, "education.json")
+            .await(ready2);
+
+        function ready2(error, us, sentiment, population, income, female, education) {
+            if (error) throw error;
+            var sentimentById = {};
+            sentiment.forEach(function (d) {
+                console.log(d.id);
+                sentimentById[d.id] = [];
+                sentimentById[d.id].push({
+                    "id": d.id,
+                    "sentiment_fake": d.sentiment_fake,
+                    "state": d.state,
+                    "rank": d.rank
+                });
+                d.rank = +d.rank;
+
+            });
+
+            var populationById = {};
+            population.forEach(function (d) {
+                populationById[d.id] = [];
+                d.population = +d.population;
+                d.rank = +d.rank;
+            });
+            population.forEach(function (d) {
+                populationById[d.id].push({"id": d.id, "population": d.population, "state": d.state, "rank": d.rank});
+            });
+            var incomeById = {};
+            income.forEach(function (d) {
+                incomeById[d.id] = [];
+                d.income = +d.income;
+                d.rank = +d.rank;
+            });
+            income.forEach(function (d) {
+                incomeById[d.id].push({"id": d.id, "income": d.income, "state": d.state, "rank": d.rank});
+            });
+            var femaleById = {};
+            female.forEach(function (d) {
+                femaleById[d.id] = [];
+                d.Female = +d.Female;
+                d.rank = +d.rank;
+            });
+            female.forEach(function (d) {
+                femaleById[d.id].push({"id": d.id, "Female": d.Female, "state": d.state, "rank": d.rank});
+            });
+            var educationById = {};
+            education.forEach(function (d) {
+                educationById[d.id] = [];
+                d.education = +d.education;
+                d.rank = +d.rank;
+            });
+            education.forEach(function (d) {
+                educationById[d.id].push({"id": d.id, "education": d.education, "state": d.state, "rank": d.rank});
+            });
+
+
+            var senti_Max = d3.max(sentiment, function (d) {
+                return d.sentiment_fake;
+            });
+
+            var senti_Min = d3.min(sentiment, function (d) {
+                return d.sentiment_fake;
+            });
+
+            var mid = (senti_Max-senti_Min)/8;
+
+            var x = d3.scale.linear()
+                .domain([(senti_Min-2).toFixed(2),(senti_Min+mid).toFixed(2),(senti_Min+2*mid).toFixed(2),(senti_Min+3*mid).toFixed(2),(senti_Min+4*mid).toFixed(2),(senti_Min+5*mid).toFixed(2),(senti_Min+6*mid).toFixed(2),(senti_Min+7*mid).toFixed(2),(senti_Max+2).toFixed(2)])
+                .range([600, 860]);
+            var color = d3.scale.threshold()
+                .domain([(senti_Min-2).toFixed(2),(senti_Min+mid).toFixed(2),(senti_Min+2*mid).toFixed(2),(senti_Min+3*mid).toFixed(2),(senti_Min+4*mid).toFixed(2),(senti_Min+5*mid).toFixed(2),(senti_Min+6*mid).toFixed(2),(senti_Min+7*mid).toFixed(2),(senti_Max+2).toFixed(2)])
+                .range(["white","#b2182b","#d6604d","#f4a582","#fddbc7","#d1e5f0","#92c5de","#4393c3","#2166ac"]);
+
+            var colorarray = ["white","#b2182b","#d6604d","#f4a582","#fddbc7","#d1e5f0","#92c5de","#4393c3","#2166ac"];
+
+
+            var g = svg4.append("g")
+                .attr("class", "key")
+
+            g.selectAll("rect")
+                .data(color.range().map(function(d) {
+                    d = color.invertExtent(d);
+                    return d;
+                }))
+                .enter().append("rect")
+                .attr("height", 20)
+                .attr("x", function (d) { return 870;})
+                .attr("y",function (d,i) {
+                    if(i!=0){
+                        return 310+i*20;
+                    }
+                })
+                .attr("width", function(d,i) {
+                    return 20;
+                })
+                .attr("fill", function(d,i) {
+                    return colorarray[i];
+                });
+
+            var legend = [senti_Min.toFixed(2),(senti_Min+mid).toFixed(2),(senti_Min+2*mid).toFixed(2),(senti_Min+3*mid).toFixed(2),(senti_Min+4*mid).toFixed(2),(senti_Min+5*mid).toFixed(2),(senti_Min+6*mid).toFixed(2),(senti_Min+7*mid).toFixed(2),senti_Max.toFixed(2)];
+
+            g.selectAll("text")
+                .data(legend)
+                .enter()
+                .append("text")
+                .attr("font-weight","5px")
+                .attr("fill","black")
+                .attr("x",895)
+                .attr("y",function (d,i) {
+                    return 335+i*20;
+                })
+                .text(function(d,i){
+                    return legend[i];
+                });
+
+            var map = svg4.append("g")
+                .attr("class", "states")
+                .selectAll("path")
+                .data(topojson.feature(us, us.objects.states).features)
+                .enter().append("path")
+                .attr("fill", function (d) {
+                    // console.log(d.id);
+                    return color(sentimentById[d.id][0].sentiment_fake);
+                })
+                .attr("d", path);
+
+
+            map.on("click", function (d) {
+                //yellow background
+                svg.append("rect")
+                    .attr("class", "info")
+                    .attr("height", 250)
+                    .attr("x", 300)
+                    .attr("y", 330)
+                    .attr("rx", 8)
+                    .attr("ry", 8)
+                    .attr("width", 400)
+                    .attr("fill", "#FFFFE0")
+                    .attr("stroke", "GREY")
+                    .on("click", function (d) {
+                        svg.selectAll(".info").remove();
+                    });
+
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 460)
+                    .attr("y", 360)
+                    .attr("font-size", "20px", "bold")
+                    .text(function () {
+                        return populationById[d.id][0].state;
+                    });
+
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 330)
+                    .attr("y", 395)
+                    .attr("font-size", "16px")
+                    .text("Sentiment ");
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 640)
+                    .attr("y", 395)
+                    .attr("font-size", "14px")
+                    .text("+1");
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 450)
+                    .attr("y", 395)
+                    .attr("font-size", "14px")
+                    .text("-1");
+                //sentiment rectangle
+                svg.append("rect")
+                    .attr("class", "info")
+                    .attr("height", 25)
+                    .attr("x", 470)
+                    .attr("y", 380)
+                    .attr("width", 160)
+                    .attr("stroke", "lightgrey")
+                    .attr("fill", "white");
+                var SentiRect = svg.append("rect")
+                    .attr("class", "info")
+                    .attr("height", 25)
+                    .attr("x", 470)
+                    .attr("y", 380)
+                    .attr("width", function () {
+                        if (sentimentById[d.id][0].sentiment_fake >= 0) {
+                            return 160 * ((sentimentById[d.id][0].sentiment_fake + 1) / 2);
+                        } else {
+                            return 160 * ((1-Math.abs(sentimentById[d.id][0].sentiment_fake)) / 2);
+                        }
+                    })
+                    .attr("stroke", "lightgrey")
+                    .attr("fill", "pink")
+                    .on("mouseover", function () {
+                        d3.select(this)
+                            .transition()
+                            .duration(10).style("opacity", 10);
+                        div.transition()
+                            .duration(10)
+                            .style("opacity", 10)
+                        div.html(function () {
+                            var senti = sentimentById[d.id][0].sentiment_fake.toFixed(2);
+                            return "<br/>" + "Sentiment Degree is: " + senti + "<br/>"
+                                + "Rank in US is:" + sentimentById[d.id][0].rank;
+                        })
+                            .attr("fill", "white")
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 10) + "px");
+                    })
+                    .on("mouseout", function (d) {
+                        div.transition()
+                            .duration(10)
+                            .style("opacity", 0);
+                    });
+                //population rectangle
+                var popmin = d3.min(population, function (d) {
+                    if (d.population != 0) {
+                        return d.population;
+                    }
+                });
+                var popmax = d3.max(population, function (d) {
+                    return d.population;
+                });
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 330)
+                    .attr("y", 435)
+                    .attr("font-size", "16px")
+                    .text("Population");
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 640)
+                    .attr("y", 435)
+                    .attr("font-size", "14px")
+                    .text(function () {
+                        return (popmax / 1000).toFixed(0) + "K";
+                    });
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 430)
+                    .attr("y", 435)
+                    .attr("font-size", "14px")
+                    .text(function () {
+                        return (popmin / 1000).toFixed(0) + "K";
+                    });
+                svg.append("rect")
+                    .attr("class", "info")
+                    .attr("height", 25)
+                    .attr("x", 470)
+                    .attr("y", 420)
+                    .attr("width", 160)
+                    .attr("stroke", "lightgrey")
+                    .attr("fill", "white");
+                var PopuRect = svg.append("rect")
+                    .attr("class", "info")
+                    .attr("height", 25)
+                    .attr("x", 470)
+                    .attr("y", 420)
+                    .attr("width", function () {
+                        return 160 * ((populationById[d.id][0].population - popmin) / (popmax - popmin));
+                    })
+                    .attr("stroke", "lightgrey")
+                    .attr("fill", "pink")
+                    .on("mouseover", function () {
+                        d3.select(this)
+                            .transition()
+                            .duration(10).style("opacity", 10);
+                        div.transition()
+                            .duration(10)
+                            .style("opacity", 10)
+                        div.html(function () {
+                            return "<br/>" + "Population is: " + populationById[d.id][0].population + "<br/>"
+                                + "Rank in US is: " + populationById[d.id][0].rank;
+                        })
+                            .attr("fill", "white")
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 10) + "px");
+                    })
+                    .on("mouseout", function (d) {
+                        div.transition()
+                            .duration(10)
+                            .style("opacity", 0);
+                    });
+                //income rectangle
+                var incomeMin = d3.min(income, function (d) {
+                    if (d.income != 0) {
+                        return d.income;
+                    }
+                });
+                var incomeMax = d3.max(income, function (d) {
+                    return d.income;
+                });
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 330)
+                    .attr("y", 475)
+                    .attr("font-size", "16px")
+                    .text("Income");
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 640)
+                    .attr("y", 475)
+                    .attr("font-size", "14px")
+                    .text(function () {
+                        return (incomeMax / 1000).toFixed(0) + "K";
+                    });
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 437)
+                    .attr("y", 475)
+                    .attr("font-size", "14px")
+                    .text(function () {
+                        return (incomeMin / 1000).toFixed(0) + "K";
+                    });
+                svg.append("rect")
+                    .attr("class", "info")
+                    .attr("height", 25)
+                    .attr("x", 470)
+                    .attr("y", 460)
+                    .attr("width", 160)
+                    .attr("stroke", "lightgrey")
+                    .attr("fill", "white");
+                var IncomeRect = svg.append("rect")
+                    .attr("class", "info")
+                    .attr("height", 25)
+                    .attr("x", 470)
+                    .attr("y", 460)
+                    .attr("width", function () {
+                        return 160 * ((incomeById[d.id][0].income - incomeMin) / (incomeMax - incomeMin));
+                    })
+                    .attr("stroke", "lightgrey")
+                    .attr("fill", "pink")
+                    .on("mouseover", function () {
+                        d3.select(this)
+                            .transition()
+                            .duration(10).style("opacity", 10);
+                        div.transition()
+                            .duration(10)
+                            .style("opacity", 10)
+                        div.html(function () {
+                            return "<br/>" + "Income is: " + incomeById[d.id][0].income + "<br/>"
+                                + "Rank in US is: " + incomeById[d.id][0].rank;
+                        })
+                            .attr("fill", "white")
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 10) + "px");
+                    })
+                    .on("mouseout", function (d) {
+                        div.transition()
+                            .duration(10)
+                            .style("opacity", 0);
+                    });
+                //femalerectangle
+                var femaleMin = d3.min(female, function (d) {
+                    if (d.Female != 0) {
+                        return d.Female;
+                    }
+                });
+                var femaleMax = d3.max(female, function (d) {
+                    return d.Female;
+                });
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 330)
+                    .attr("y", 515)
+                    .attr("font-size", "16px")
+                    .text("Female");
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 640)
+                    .attr("y", 515)
+                    .attr("font-size", "14px")
+                    .text(function () {
+                        return femaleMax;
+                    });
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 436)
+                    .attr("y", 515)
+                    .attr("font-size", "14px")
+                    .text(function () {
+                        return femaleMin;
+                    });
+                svg.append("rect")
+                    .attr("class", "info")
+                    .attr("height", 25)
+                    .attr("x", 470)
+                    .attr("y", 500)
+                    .attr("width", 160)
+                    .attr("stroke", "lightgrey")
+                    .attr("fill", "white");
+                var FemaleRect = svg.append("rect")
+                    .attr("class", "info")
+                    .attr("height", 25)
+                    .attr("x", 470)
+                    .attr("y", 500)
+                    .attr("width", function () {
+                        return 160 * ((femaleById[d.id][0].Female - femaleMin) / (femaleMax - femaleMin));
+                    })
+                    .attr("stroke", "lightgrey")
+                    .attr("fill", "pink")
+                    .on("mouseover", function () {
+                        d3.select(this)
+                            .transition()
+                            .duration(10).style("opacity", 10);
+                        div.transition()
+                            .duration(10)
+                            .style("opacity", 10)
+                        div.html(function () {
+                            return "<br/>" + "Female percentage is: " + femaleById[d.id][0].Female + "<br/>"
+                                + "Rank in US is: " + femaleById[d.id][0].rank;
+                        })
+                            .attr("fill", "white")
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 10) + "px");
+                    })
+                    .on("mouseout", function (d) {
+                        div.transition()
+                            .duration(10)
+                            .style("opacity", 0);
+                    });
+                //femalerectangle
+                var educationMin = d3.min(education, function (d) {
+                    if (d.education != 0) {
+                        return d.education;
+                    }
+                });
+                var educationMax = d3.max(education, function (d) {
+                    return d.education;
+                });
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 330)
+                    .attr("y", 555)
+                    .attr("font-size", "16px")
+                    .text("Education");
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 640)
+                    .attr("y", 555)
+                    .attr("font-size", "14px")
+                    .text(function () {
+                        return educationMax;
+                    });
+                svg.append("text")
+                    .attr("class", "info")
+                    .attr("x", 436)
+                    .attr("y", 555)
+                    .attr("font-size", "14px")
+                    .text(function () {
+                        return educationMin;
+                    });
+                svg.append("rect")
+                    .attr("class", "info")
+                    .attr("height", 25)
+                    .attr("x", 470)
+                    .attr("y", 540)
+                    .attr("width", 160)
+                    .attr("stroke", "lightgrey")
+                    .attr("fill", "white");
+                var EducationRect = svg.append("rect")
+                    .attr("class", "info")
+                    .attr("height", 25)
+                    .attr("x", 470)
+                    .attr("y", 540)
+                    .attr("width", function () {
+                        return 160 * ((educationById[d.id][0].education - educationMin) / (educationMax - educationMin));
+                    })
+                    .attr("stroke", "lightgrey")
+                    .attr("fill", "pink")
+                    .on("mouseover", function () {
+                        d3.select(this)
+                            .transition()
+                            .duration(10).style("opacity", 10);
+                        div.transition()
+                            .duration(10)
+                            .style("opacity", 10)
+                        div.html(function () {
+                            return "<br/>" + "Education level is: " + educationById[d.id][0].education + "<br/>"
+                                + "Rank in US is: " + educationById[d.id][0].rank;
+                        })
+                            .attr("fill", "white")
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 10) + "px");
+                    })
+                    .on("mouseout", function (d) {
+                        div.transition()
+                            .duration(10)
+                            .style("opacity", 0);
+                    });
+            });
+
+        }
+    });
+
+    function drawmap(selectValue) {
+
+        if(selectValue == "Sentiment"){
+
+
+            svg.selectAll(".info").remove();
+            svg4.selectAll(".key").remove();
+            svg4.selectAll(".states").remove();
+            svg.selectAll(".label").remove();
+
+
+            d3.csv("../data/currentSearch.csv", function(topics) {
+                var objects = topics[0];
+                var list = Object.values(objects);
+                topic_name = list[0];
+                svg.append("text")
+                    .attr("class","label")
+                    .attr("x",350)
+                    .attr("y",200)
+                    .attr("font-size","28px","bold")
+                    .text("US's Feeling on " + topic_name);
+                var new_topic_name = topic_name + ".json";
+
+                d3.queue()
+                    .defer(d3.json,"us.json")
+                    .defer(d3.json, new_topic_name)
+                    .defer(d3.json, "population.json")
+                    .defer(d3.json, "income.json")
+                    .defer(d3.json, "female.json")
+                    .defer(d3.json, "education.json")
+                    .await(ready2);
+
+                function ready2(error, us, sentiment, population, income, female, education) {
+                    if (error) throw error;
+                    var sentimentById = {};
+                    sentiment.forEach(function (d) {
+                        sentimentById[d.id] = [];
+                        sentimentById[d.id].push({
+                            "id": d.id,
+                            "sentiment_fake": d.sentiment_fake,
+                            "state": d.state,
+                            "rank": d.rank
+                        });
+                        d.rank = +d.rank;
+                    });
+
+                    var populationById = {};
+                    population.forEach(function (d) {
+                        populationById[d.id] = [];
+                        d.population = +d.population;
+                        d.rank = +d.rank;
+                    });
+                    population.forEach(function (d) {
+                        populationById[d.id].push({"id": d.id, "population": d.population, "state": d.state, "rank": d.rank});
+                    });
+                    var incomeById = {};
+                    income.forEach(function (d) {
+                        incomeById[d.id] = [];
+                        d.income = +d.income;
+                        d.rank = +d.rank;
+                    });
+                    income.forEach(function (d) {
+                        incomeById[d.id].push({"id": d.id, "income": d.income, "state": d.state, "rank": d.rank});
+                    });
+                    var femaleById = {};
+                    female.forEach(function (d) {
+                        femaleById[d.id] = [];
+                        d.Female = +d.Female;
+                        d.rank = +d.rank;
+                    });
+                    female.forEach(function (d) {
+                        femaleById[d.id].push({"id": d.id, "Female": d.Female, "state": d.state, "rank": d.rank});
+                    });
+                    var educationById = {};
+                    education.forEach(function (d) {
+                        educationById[d.id] = [];
+                        d.education = +d.education;
+                        d.rank = +d.rank;
+                    });
+                    education.forEach(function (d) {
+                        educationById[d.id].push({"id": d.id, "education": d.education, "state": d.state, "rank": d.rank});
+                    });
+
+                    var senti_Max = d3.max(sentiment, function (d) {
+                        return d.sentiment_fake;
+                    });
+
+                    var senti_Min = d3.min(sentiment, function (d) {
+                        return d.sentiment_fake;
+                    });
+
+                    var mid = (senti_Max-senti_Min)/8;
+
+                    var x = d3.scale.linear()
+                        .domain([(senti_Min-1).toFixed(2),(senti_Min+mid).toFixed(2),(senti_Min+2*mid).toFixed(2),(senti_Min+3*mid).toFixed(2),(senti_Min+4*mid).toFixed(2),(senti_Min+5*mid).toFixed(2),(senti_Min+6*mid).toFixed(2),(senti_Min+7*mid).toFixed(2),(senti_Max+1).toFixed(2)])
+                        .range([600, 860]);
+                    var color = d3.scale.threshold()
+                        .domain([(senti_Min-1).toFixed(2),(senti_Min+mid).toFixed(2),(senti_Min+2*mid).toFixed(2),(senti_Min+3*mid).toFixed(2),(senti_Min+4*mid).toFixed(2),(senti_Min+5*mid).toFixed(2),(senti_Min+6*mid).toFixed(2),(senti_Min+7*mid).toFixed(2),(senti_Max+1).toFixed(2)])
+                        .range(["white","#b2182b","#d6604d","#f4a582","#fddbc7","#d1e5f0","#92c5de","#4393c3","#2166ac"]);
+
+                    var colorarray = ["white","#b2182b","#d6604d","#f4a582","#fddbc7","#d1e5f0","#92c5de","#4393c3","#2166ac"];
+
+                    var g = svg4.append("g")
+                        .attr("class", "key")
+
+                    g.selectAll("rect")
+                        .data(color.range().map(function(d) {
+                            d = color.invertExtent(d);
+                            return d;
+                        }))
+                        .enter().append("rect")
+                        .attr("height", 20)
+                        .attr("x", function (d) { return 870;})
+                        .attr("y",function (d,i) {
+                            return 310+i*20;
+                        })
+                        .attr("width", function(d,i) {
+                            return 20;
+                        })
+                        .attr("fill", function(d,i) {
+                            return colorarray[i];
+                        });
+
+                    var legend = [senti_Min.toFixed(2),(senti_Min+mid).toFixed(2),(senti_Min+2*mid).toFixed(2),(senti_Min+3*mid).toFixed(2),(senti_Min+4*mid).toFixed(2),(senti_Min+5*mid).toFixed(2),(senti_Min+6*mid).toFixed(2),(senti_Min+7*mid).toFixed(2),senti_Max.toFixed(2)];
+
+                    g.selectAll("text")
+                        .data(legend)
+                        .enter()
+                        .append("text")
+                        .attr("font-weight","5px")
+                        .attr("fill","black")
+                        .attr("x",895)
+                        .attr("y",function (d,i) {
+                            return 335+i*20;
+                        })
+                        .text(function(d,i){
+                            return legend[i];
+                        });
+
+
+                    var map = svg4.append("g")
+                        .attr("class", "states")
+                        .selectAll("path")
+                        .data(topojson.feature(us, us.objects.states).features)
+                        .enter().append("path")
+                        .attr("fill", function (d) {
+                            return color(sentimentById[d.id][0].sentiment_fake);
+                        })
+                        .attr("d", path);
+
+
+                    map.on("click", function (d) {
+                        //yellow background
+                        svg.append("rect")
+                            .attr("class", "info")
+                            .attr("height", 250)
+                            .attr("x", 300)
+                            .attr("y", 330)
+                            .attr("rx", 8)
+                            .attr("ry", 8)
+                            .attr("width", 400)
+                            .attr("fill", "#FFFFE0")
+                            .attr("stroke", "GREY")
+                            .on("click", function (d) {
+                                svg.selectAll(".info").remove();
+                            });
+
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 460)
+                            .attr("y", 360)
+                            .attr("font-size", "20px", "bold")
+                            .text(function () {
+                                return populationById[d.id][0].state;
+                            });
+
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 330)
+                            .attr("y", 395)
+                            .attr("font-size", "16px")
+                            .text("Sentiment ");
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 640)
+                            .attr("y", 395)
+                            .attr("font-size", "14px")
+                            .text("+1");
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 450)
+                            .attr("y", 395)
+                            .attr("font-size", "14px")
+                            .text("-1");
+                        //sentiment rectangle
+                        svg.append("rect")
+                            .attr("class", "info")
+                            .attr("height", 25)
+                            .attr("x", 470)
+                            .attr("y", 380)
+                            .attr("width", 160)
+                            .attr("stroke", "lightgrey")
+                            .attr("fill", "white");
+
+                        var SentiRect = svg.append("rect")
+                            .attr("class", "info")
+                            .attr("height", 25)
+                            .attr("x", 470)
+                            .attr("y", 380)
+                            .attr("width", function () {
+                                if (sentimentById[d.id][0].sentiment_fake >= 0) {
+                                    return 160 * ((sentimentById[d.id][0].sentiment_fake + 1) / 2);
+                                } else {
+                                    return 160 * ((1-Math.abs(sentimentById[d.id][0].sentiment_fake)) / 2);
+                                }
+                            })
+                            .attr("stroke", "lightgrey")
+                            .attr("fill", "pink")
+                            .on("mouseover", function () {
+                                d3.select(this)
+                                    .transition()
+                                    .duration(10).style("opacity", 10);
+                                div.transition()
+                                    .duration(10)
+                                    .style("opacity", 10)
+                                div.html(function () {
+                                    var senti = sentimentById[d.id][0].sentiment_fake.toFixed(2);
+                                    return "<br/>" + senti +  " Sentiment Degree is: " + sentimentById[d.id][0].sentiment_fake + "<br/>"
+                                        + "Rank in US is:" + sentimentById[d.id][0].rank;
+                                })
+                                    .attr("fill", "white")
+                                    .style("left", (d3.event.pageX) + "px")
+                                    .style("top", (d3.event.pageY - 10) + "px");
+                            })
+                            .on("mouseout", function (d) {
+                                div.transition()
+                                    .duration(10)
+                                    .style("opacity", 0);
+                            });
+                        //population rectangle
+                        var popmin = d3.min(population, function (d) {
+                            if (d.population != 0) {
+                                return d.population;
+                            }
+                        });
+                        var popmax = d3.max(population, function (d) {
+                            return d.population;
+                        });
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 330)
+                            .attr("y", 435)
+                            .attr("font-size", "16px")
+                            .text("Population");
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 640)
+                            .attr("y", 435)
+                            .attr("font-size", "14px")
+                            .text(function () {
+                                return (popmax / 1000).toFixed(0) + "K";
+                            });
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 430)
+                            .attr("y", 435)
+                            .attr("font-size", "14px")
+                            .text(function () {
+                                return (popmin / 1000).toFixed(0) + "K";
+                            });
+                        svg.append("rect")
+                            .attr("class", "info")
+                            .attr("height", 25)
+                            .attr("x", 470)
+                            .attr("y", 420)
+                            .attr("width", 160)
+                            .attr("stroke", "lightgrey")
+                            .attr("fill", "white");
+                        var PopuRect = svg.append("rect")
+                            .attr("class", "info")
+                            .attr("height", 25)
+                            .attr("x", 470)
+                            .attr("y", 420)
+                            .attr("width", function () {
+                                return 160 * ((populationById[d.id][0].population - popmin) / (popmax - popmin));
+                            })
+                            .attr("stroke", "lightgrey")
+                            .attr("fill", "pink")
+                            .on("mouseover", function () {
+                                d3.select(this)
+                                    .transition()
+                                    .duration(10).style("opacity", 10);
+                                div.transition()
+                                    .duration(10)
+                                    .style("opacity", 10)
+                                div.html(function () {
+                                    return "<br/>" + "Population is: " + populationById[d.id][0].population + "<br/>"
+                                        + "Rank in US is: " + populationById[d.id][0].rank;
+                                })
+                                    .attr("fill", "white")
+                                    .style("left", (d3.event.pageX) + "px")
+                                    .style("top", (d3.event.pageY - 10) + "px");
+                            })
+                            .on("mouseout", function (d) {
+                                div.transition()
+                                    .duration(10)
+                                    .style("opacity", 0);
+                            });
+                        //income rectangle
+                        var incomeMin = d3.min(income, function (d) {
+                            if (d.income != 0) {
+                                return d.income;
+                            }
+                        });
+                        var incomeMax = d3.max(income, function (d) {
+                            return d.income;
+                        });
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 330)
+                            .attr("y", 475)
+                            .attr("font-size", "16px")
+                            .text("Income");
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 640)
+                            .attr("y", 475)
+                            .attr("font-size", "14px")
+                            .text(function () {
+                                return (incomeMax / 1000).toFixed(0) + "K";
+                            });
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 437)
+                            .attr("y", 475)
+                            .attr("font-size", "14px")
+                            .text(function () {
+                                return (incomeMin / 1000).toFixed(0) + "K";
+                            });
+                        svg.append("rect")
+                            .attr("class", "info")
+                            .attr("height", 25)
+                            .attr("x", 470)
+                            .attr("y", 460)
+                            .attr("width", 160)
+                            .attr("stroke", "lightgrey")
+                            .attr("fill", "white");
+                        var IncomeRect = svg.append("rect")
+                            .attr("class", "info")
+                            .attr("height", 25)
+                            .attr("x", 470)
+                            .attr("y", 460)
+                            .attr("width", function () {
+                                return 160 * ((incomeById[d.id][0].income - incomeMin) / (incomeMax - incomeMin));
+                            })
+                            .attr("stroke", "lightgrey")
+                            .attr("fill", "pink")
+                            .on("mouseover", function () {
+                                d3.select(this)
+                                    .transition()
+                                    .duration(10).style("opacity", 10);
+                                div.transition()
+                                    .duration(10)
+                                    .style("opacity", 10)
+                                div.html(function () {
+                                    return "<br/>" + "Income is: " + incomeById[d.id][0].income + "<br/>"
+                                        + "Rank in US is: " + incomeById[d.id][0].rank;
+                                })
+                                    .attr("fill", "white")
+                                    .style("left", (d3.event.pageX) + "px")
+                                    .style("top", (d3.event.pageY - 10) + "px");
+                            })
+                            .on("mouseout", function (d) {
+                                div.transition()
+                                    .duration(10)
+                                    .style("opacity", 0);
+                            });
+                        //femalerectangle
+                        var femaleMin = d3.min(female, function (d) {
+                            if (d.Female != 0) {
+                                return d.Female;
+                            }
+                        });
+                        var femaleMax = d3.max(female, function (d) {
+                            return d.Female;
+                        });
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 330)
+                            .attr("y", 515)
+                            .attr("font-size", "16px")
+                            .text("Female");
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 640)
+                            .attr("y", 515)
+                            .attr("font-size", "14px")
+                            .text(function () {
+                                return femaleMax;
+                            });
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 436)
+                            .attr("y", 515)
+                            .attr("font-size", "14px")
+                            .text(function () {
+                                return femaleMin;
+                            });
+                        svg.append("rect")
+                            .attr("class", "info")
+                            .attr("height", 25)
+                            .attr("x", 470)
+                            .attr("y", 500)
+                            .attr("width", 160)
+                            .attr("stroke", "lightgrey")
+                            .attr("fill", "white");
+                        var FemaleRect = svg.append("rect")
+                            .attr("class", "info")
+                            .attr("height", 25)
+                            .attr("x", 470)
+                            .attr("y", 500)
+                            .attr("width", function () {
+                                return 160 * ((femaleById[d.id][0].Female - femaleMin) / (femaleMax - femaleMin));
+                            })
+                            .attr("stroke", "lightgrey")
+                            .attr("fill", "pink")
+                            .on("mouseover", function () {
+                                d3.select(this)
+                                    .transition()
+                                    .duration(10).style("opacity", 10);
+                                div.transition()
+                                    .duration(10)
+                                    .style("opacity", 10)
+                                div.html(function () {
+                                    return "<br/>" + "Female percentage is: " + femaleById[d.id][0].Female + "<br/>"
+                                        + "Rank in US is: " + femaleById[d.id][0].rank;
+                                })
+                                    .attr("fill", "white")
+                                    .style("left", (d3.event.pageX) + "px")
+                                    .style("top", (d3.event.pageY - 10) + "px");
+                            })
+                            .on("mouseout", function (d) {
+                                div.transition()
+                                    .duration(10)
+                                    .style("opacity", 0);
+                            });
+                        //femalerectangle
+                        var educationMin = d3.min(education, function (d) {
+                            if (d.education != 0) {
+                                return d.education;
+                            }
+                        });
+                        var educationMax = d3.max(education, function (d) {
+                            return d.education;
+                        });
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 330)
+                            .attr("y", 555)
+                            .attr("font-size", "16px")
+                            .text("Education");
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 640)
+                            .attr("y", 555)
+                            .attr("font-size", "14px")
+                            .text(function () {
+                                return educationMax;
+                            });
+                        svg.append("text")
+                            .attr("class", "info")
+                            .attr("x", 436)
+                            .attr("y", 555)
+                            .attr("font-size", "14px")
+                            .text(function () {
+                                return educationMin;
+                            });
+                        svg.append("rect")
+                            .attr("class", "info")
+                            .attr("height", 25)
+                            .attr("x", 470)
+                            .attr("y", 540)
+                            .attr("width", 160)
+                            .attr("stroke", "lightgrey")
+                            .attr("fill", "white");
+                        var EducationRect = svg.append("rect")
+                            .attr("class", "info")
+                            .attr("height", 25)
+                            .attr("x", 470)
+                            .attr("y", 540)
+                            .attr("width", function () {
+                                return 160 * ((educationById[d.id][0].education - educationMin) / (educationMax - educationMin));
+                            })
+                            .attr("stroke", "lightgrey")
+                            .attr("fill", "pink")
+                            .on("mouseover", function () {
+                                d3.select(this)
+                                    .transition()
+                                    .duration(10).style("opacity", 10);
+                                div.transition()
+                                    .duration(10)
+                                    .style("opacity", 10)
+                                div.html(function () {
+                                    return "<br/>" + "Education level is: " + educationById[d.id][0].education + "<br/>"
+                                        + "Rank in US is: " + educationById[d.id][0].rank;
+                                })
+                                    .attr("fill", "white")
+                                    .style("left", (d3.event.pageX) + "px")
+                                    .style("top", (d3.event.pageY - 10) + "px");
+                            })
+                            .on("mouseout", function (d) {
+                                div.transition()
+                                    .duration(10)
+                                    .style("opacity", 0);
+                            });
+                    });
+
+                }
+            });
+
+       }else if(selectValue == "income"){
+
+            svg.selectAll(".info").remove();
+            svg4.selectAll(".key").remove();
+            svg4.selectAll(".states").remove();
+            svg.selectAll(".label").remove();
+
+            var x = d3.scale.linear()
+                .domain([17620,29501,41381,53261,65145])
+                .range([600, 860]);
+            var color = d3.scale.threshold()
+                .domain([17620,29501,41381,53261,65145])
+                .range(["white","#fddbc7","#f4a582","#d6604d","#b2182b"]);
+            var colorarray = ["white","#fddbc7","#f4a582","#d6604d","#b2182b"];
+
+            svg.append("text")
+                .attr("class","label")
+                .attr("x",400)
+                .attr("y",200)
+                .attr("font-size","28px","bold")
+                .text("Income GeoMap");
+
+
+            var g = svg4.append("g")
+                .attr("class", "key")
+
+            g.selectAll("rect")
+                .data(color.range().map(function(d) {
+                    d = color.invertExtent(d);
+                    return d;
+                }))
+                .enter().append("rect")
+                .attr("height", 20)
+                .attr("x", function (d) { return 870;})
+                .attr("y",function (d,i) {
+                    return 400+i*20;
+                })
+                .attr("width", function(d,i) {
+                    return 20;
+                })
+                .attr("fill", function(d,i) {
+                    return colorarray[i];
+                });
+            var legend = ["17K","29K","41K","53K","65K"];
+
+            g.selectAll("text")
+                .data(legend)
+                .enter()
+                .append("text")
+                .attr("font-weight","5px")
+                .attr("fill","black")
+                .attr("x",895)
+                .attr("y",function (d,i) {
+                    return 425+i*20;
+                })
+                .text(function(d,i){
+                    return legend[i];
+                });
+
+            d3.queue()
+                .defer(d3.json,"us.json")
+                .defer(d3.json, "income.json")
+                .await(ready2);
+
+            function ready2(error, us, income) {
+                if (error) throw error;
+                var incomeById = {};
+                income.forEach(function (d) {
+                    incomeById[d.id] = [];
+                    d.income = +d.income;
+                    d.rank = +d.rank;
+                });
+                income.forEach(function (d) {
+                    incomeById[d.id].push({"id": d.id, "income": d.income, "state": d.state, "rank": d.rank});
+                });
+
+                var map = svg4.append("g")
+                    .attr("class", "states")
+                    .selectAll("path")
+                    .data(topojson.feature(us, us.objects.states).features)
+                    .enter().append("path")
+                    .attr("fill", function (d) {
+                        return color(incomeById[d.id][0].income);
+                    })
+                    .attr("d", path);
+            }
+
+        }else if(selectValue == "female"){
+
+            svg.selectAll(".info").remove();
+            svg.selectAll(".label").remove();
+            svg4.selectAll(".key").remove();
+            svg4.selectAll(".states").remove();
+
+            var x = d3.scale.linear()
+                .domain([0.48,0.49,0.5,0.51,0.52])
+                .range([600, 860]);
+            var color = d3.scale.threshold()
+                .domain([0.48,0.49,0.5,0.51,0.52])
+                .range(["white","#fddbc7","#f4a582","#d6604d","#b2182b","#67001f"]);
+            var colorarray = ["white","#fddbc7","#f4a582","#d6604d","#b2182b","#67001f"];
+
+            svg.append("text")
+                .attr("class","label")
+                .attr("x",400)
+                .attr("y",200)
+                .attr("font-size","28px","bold")
+                .text("Female Ratio GeoMap");
+
+
+            var g = svg4.append("g")
+                .attr("class", "key")
+
+            g.selectAll("rect")
+                .data(color.range().map(function(d) {
+                    d = color.invertExtent(d);
+                    return d;
+                }))
+                .enter().append("rect")
+                .attr("height", 20)
+                .attr("x", function (d) { return 870;})
+                .attr("y",function (d,i) {
+                    return 400+i*20;
+                })
+                .attr("width", function(d,i) {
+                    return 20;
+                })
+                .attr("fill", function(d,i) {
+                    return colorarray[i];
+                });
+
+            var legend = [0.48,0.49,0.50,0.51,0.52];
+
+            g.selectAll("text")
+                .data(legend)
+                .enter()
+                .append("text")
+                .attr("font-weight","5px")
+                .attr("fill","black")
+                .attr("x",895)
+                .attr("y",function (d,i) {
+                    return 435+i*20;
+                })
+                .text(function(d,i){
+                    return legend[i];
+                });
+
+            d3.queue()
+                .defer(d3.json,"us.json")
+                .defer(d3.json, "female.json")
+                .await(ready2);
+
+            function ready2(error, us, female) {
+                if (error) throw error;
+                var femaleById = {};
+                female.forEach(function (d) {
+                    femaleById[d.id] = [];
+                    d.Female = +d.Female;
+                    d.rank = +d.rank;
+                });
+                female.forEach(function (d) {
+                    femaleById[d.id].push({"id": d.id, "Female": d.Female, "state": d.state, "rank": d.rank});
+                });
+
+                var map = svg4.append("g")
+                    .attr("class", "states")
+                    .selectAll("path")
+                    .data(topojson.feature(us, us.objects.states).features)
+                    .enter().append("path")
+                    .attr("fill", function (d) {
+                        return color(femaleById[d.id][0].Female);
+                    })
+                    .attr("d", path);
+            }
+
+
+        }else if(selectValue == "population"){
+
+            svg.selectAll(".info").remove();svg.selectAll(".label").remove();
+            svg4.selectAll(".key").remove();
+            svg4.selectAll(".states").remove();
+
+            var x = d3.scale.linear()
+                .domain([585400,10251630,19917759,29583888,39250020])
+                .range([600, 860]);
+            var color = d3.scale.threshold()
+                .domain([585400,10251630,19917759,29583888,39250020])
+                .range(["white","#fddbc7","#f4a582","#d6604d","#b2182b"]);
+            var colorarray = ["white","#fddbc7","#f4a582","#d6604d","#b2182b"];
+
+            svg.append("text")
+                .attr("class","label")
+                .attr("x",400)
+                .attr("y",200)
+                .attr("font-size","28px","bold")
+                .text("Population GeoMap");
+
+
+            var g = svg4.append("g")
+                .attr("class", "key")
+                g.selectAll("rect")
+                .data(color.range().map(function(d) {
+                    d = color.invertExtent(d);
+                    return d;
+                }))
+                .enter().append("rect")
+                .attr("height", 20)
+                .attr("x", function (d) { return 870;})
+                .attr("y",function (d,i) {
+                    return 370+i*20;
+                })
+                .attr("width", function(d,i) {
+                    return 20;
+                })
+                .attr("fill", function(d,i) {
+                    return colorarray[i];
+                });
+            var legend = ["585K","10251K","19917K","29583K","39250K"];
+
+            g.selectAll("text")
+                .data(legend)
+                .enter()
+                .append("text")
+                .attr("font-weight","5px")
+                .attr("fill","black")
+                .attr("x",895)
+                .attr("y",function (d,i) {
+                    return 395+i*20;
+                })
+                .text(function(d,i){
+                    return legend[i];
+                });
+
+            d3.queue()
+                .defer(d3.json,"us.json")
+                .defer(d3.json, "population.json")
+                .await(ready2);
+
+            function ready2(error, us, population) {
+                if (error) throw error;
+                var populationById = {};
+                population.forEach(function (d) {
+                    populationById[d.id] = [];
+                    d.population = +d.population;
+                    d.rank = +d.rank;
+                });
+                population.forEach(function (d) {
+                    populationById[d.id].push({"id": d.id, "population": d.population, "state": d.state, "rank": d.rank});
+                });
+
+                var map = svg4.append("g")
+                    .attr("class", "states")
+                    .selectAll("path")
+                    .data(topojson.feature(us, us.objects.states).features)
+                    .enter().append("path")
+                    .attr("fill", function (d) {
+                        return color(populationById[d.id][0].population);
+                    })
+                    .attr("d", path);
+            }
+
+        }else if(selectValue == "education"){
+
+            svg.selectAll(".info").remove();
+            svg.selectAll(".label").remove();
+            svg4.selectAll(".key").remove();
+            svg4.selectAll(".states").remove();
+
+            var x = d3.scale.linear()
+                .domain([17.4,25.65,33.8,41.95,50.3])
+                .range([600, 860]);
+            var color = d3.scale.threshold()
+                .domain([17.4,25.65,33.8,41.95,50.3])
+                .range(["white","#fddbc7","#f4a582","#d6604d","#b2182b"]);
+            var colorarray = ["white","#fddbc7","#f4a582","#d6604d","#b2182b"];
+
+            svg.append("text")
+                .attr("class","label")
+                .attr("x",400)
+                .attr("y",200)
+                .attr("font-size","28px","bold")
+                .text("Education GeoMap");
+
+
+
+            var g = svg4.append("g")
+                .attr("class", "key")
+            g.selectAll("rect")
+                .data(color.range().map(function(d) {
+                    d = color.invertExtent(d);
+                    return d;
+                }))
+                .enter().append("rect")
+                .attr("height", 20)
+                .attr("x", function (d) { return 870;})
+                .attr("y",function (d,i) {
+                    return 390+i*20;
+                })
+                .attr("width", function(d,i) {
+                    return 20;
+                })
+                .attr("fill", function(d,i) {
+                    return colorarray[i];
+                });
+            var legend = [17.4,25.65,33.8,41.95,50.3];
+
+            g.selectAll("text")
+                .data(legend)
+                .enter()
+                .append("text")
+                .attr("font-weight","5px")
+                .attr("fill","black")
+                .attr("x",895)
+                .attr("y",function (d,i) {
+                    return 415+i*20;
+                })
+                .text(function(d,i){
+                    return legend[i];
+                });
+
+            d3.queue()
+                .defer(d3.json,"us.json")
+                .defer(d3.json, "education.json")
+                .await(ready2);
+
+            function ready2(error, us, education) {
+                if (error) throw error;
+                var educationById = {};
+                education.forEach(function (d) {
+                    educationById[d.id] = [];
+                    d.education = +d.education;
+                    d.rank = +d.rank;
+                });
+                education.forEach(function (d) {
+                    educationById[d.id].push({"id": d.id, "education": d.education, "state": d.state, "rank": d.rank});
+                });
+
+                var map = svg4.append("g")
+                    .attr("class", "states")
+                    .selectAll("path")
+                    .data(topojson.feature(us, us.objects.states).features)
+                    .enter().append("path")
+                    .attr("fill", function (d) {
+                        return color(educationById[d.id][0].education);
+                    })
+                    .attr("d", path);
+            }
+
+
+        }
+    }
+</script>

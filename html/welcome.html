@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="">
+<!--   <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+         rel = "stylesheet"> -->
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+  <script src="lib/jquery.csv.js"></script>
+  <link rel = "stylesheet" type = "text/css" href = "../css/welcome.css" />
+  
+  <script>
+
+    $.ajax({
+        url: "../data/inputSuggest.csv",
+        aync: false,
+        success: function(csvFile) {
+            data = $.csv.toArrays(csvFile);
+        },
+        dataType: "text",
+        complete: function() {
+            var suggestions = [];
+            for (var i = 0; i < data.length; i++) {
+                suggestions.push(data[i][0]);
+            }
+            console.log(data.length);
+            $("#sfield").autocomplete({
+                source:suggestions
+            });
+        }
+    });
+  </script>
+
+
+
+</head>
+
+<body>
+    <h1>Welcome</h1>
+
+    <div id = "searchBox">
+        <form>
+            <label for="sfield">Search: </label>
+            <input type="text" name="sfield" id="sfield" />
+        </form>
+    </div>
+    
+</body>
+</html>

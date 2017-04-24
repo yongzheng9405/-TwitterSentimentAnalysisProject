@@ -1,0 +1,356 @@
+[
+  {
+    "id": 23,
+    "sentiment_fake": 0.98,
+    "state": "Maine",
+    "rank": 1
+  },
+  {
+    "id": 6,
+    "sentiment_fake": 0.96,
+    "state": "California",
+    "rank": 2
+  },
+  {
+    "id": 28,
+    "sentiment_fake": 0.92,
+    "state": "Mississippi",
+    "rank": 3
+  },
+  {
+    "id": 56,
+    "sentiment_fake": 0.92,
+    "state": "Wyoming",
+    "rank": 4
+  },
+  {
+    "id": 2,
+    "sentiment_fake": 0.87,
+    "state": "Alaska",
+    "rank": 5
+  },
+  {
+    "id": 8,
+    "sentiment_fake": 0.84,
+    "state": "Colorado",
+    "rank": 6
+  },
+  {
+    "id": 38,
+    "sentiment_fake": 0.82,
+    "state": "North Dakota",
+    "rank": 7
+  },
+  {
+    "id": 30,
+    "sentiment_fake": 0.78,
+    "state": "Montana",
+    "rank": 8
+  },
+  {
+    "id": 26,
+    "sentiment_fake": 0.77,
+    "state": "Michigan",
+    "rank": 9
+  },
+  {
+    "id": 53,
+    "sentiment_fake": 0.63,
+    "state": "Washington",
+    "rank": 10
+  },
+  {
+    "id": 13,
+    "sentiment_fake": 0.6,
+    "state": "Georgia",
+    "rank": 11
+  },
+  {
+    "id": 39,
+    "sentiment_fake": 0.57,
+    "state": "Ohio",
+    "rank": 12
+  },
+  {
+    "id": 33,
+    "sentiment_fake": 0.56,
+    "state": "New Hampshire",
+    "rank": 13
+  },
+  {
+    "id": 35,
+    "sentiment_fake": 0.54,
+    "state": "New Mexico",
+    "rank": 14
+  },
+  {
+    "id": 20,
+    "sentiment_fake": 0.45,
+    "state": "Kansas",
+    "rank": 15
+  },
+  {
+    "id": 50,
+    "sentiment_fake": 0.45,
+    "state": "Vermont",
+    "rank": 16
+  },
+  {
+    "id": 1,
+    "sentiment_fake": 0.44,
+    "state": "Alabama",
+    "rank": 17
+  },
+  {
+    "id": 34,
+    "sentiment_fake": 0.38,
+    "state": "New Jersey",
+    "rank": 18
+  },
+  {
+    "id": 32,
+    "sentiment_fake": 0.37,
+    "state": "Nevada",
+    "rank": 19
+  },
+  {
+    "id": 15,
+    "sentiment_fake": 0.34,
+    "state": "Hawaii",
+    "rank": 20
+  },
+  {
+    "id": 5,
+    "sentiment_fake": 0.32,
+    "state": "Arkansas",
+    "rank": 21
+  },
+  {
+    "id": 4,
+    "sentiment_fake": 0.3,
+    "state": "Arizona",
+    "rank": 22
+  },
+  {
+    "id": 46,
+    "sentiment_fake": 0.28,
+    "state": "South Dakota",
+    "rank": 23
+  },
+  {
+    "id": 44,
+    "sentiment_fake": 0.26,
+    "state": "Rhode Island",
+    "rank": 24
+  },
+  {
+    "id": 47,
+    "sentiment_fake": 0.26,
+    "state": "Tennessee",
+    "rank": 25
+  },
+  {
+    "id": 16,
+    "sentiment_fake": 0.2,
+    "state": "Idaho",
+    "rank": 26
+  },
+  {
+    "id": 18,
+    "sentiment_fake": 0.17,
+    "state": "Indiana",
+    "rank": 27
+  },
+  {
+    "id": 31,
+    "sentiment_fake": 0.13,
+    "state": "Nebraska",
+    "rank": 28
+  },
+  {
+    "id": 27,
+    "sentiment_fake": 0.08,
+    "state": "Minnesota",
+    "rank": 29
+  },
+  {
+    "id": 11,
+    "sentiment_fake": 0.04,
+    "state": "District of Columbia",
+    "rank": 30
+  },
+  {
+    "id": 60,
+    "sentiment_fake": 0,
+    "state": "",
+    "rank": 0
+  },
+  {
+    "id": 64,
+    "sentiment_fake": 0,
+    "state": "",
+    "rank": 0
+  },
+  {
+    "id": 66,
+    "sentiment_fake": 0,
+    "state": "",
+    "rank": 0
+  },
+  {
+    "id": 68,
+    "sentiment_fake": 0,
+    "state": "",
+    "rank": 0
+  },
+  {
+    "id": 69,
+    "sentiment_fake": 0,
+    "state": "",
+    "rank": 0
+  },
+  {
+    "id": 70,
+    "sentiment_fake": 0,
+    "state": "",
+    "rank": 0
+  },
+  {
+    "id": 78,
+    "sentiment_fake": 0,
+    "state": "",
+    "rank": 0
+  },
+  {
+    "id": 19,
+    "sentiment_fake": -0.02,
+    "state": "Iowa",
+    "rank": 31
+  },
+  {
+    "id": 24,
+    "sentiment_fake": -0.04,
+    "state": "Maryland",
+    "rank": 32
+  },
+  {
+    "id": 21,
+    "sentiment_fake": -0.1,
+    "state": "Kentucky",
+    "rank": 33
+  },
+  {
+    "id": 72,
+    "sentiment_fake": -0.13,
+    "state": "Puerto Rico",
+    "rank": 34
+  },
+  {
+    "id": 42,
+    "sentiment_fake": -0.14,
+    "state": "Pennsylvania",
+    "rank": 35
+  },
+  {
+    "id": 54,
+    "sentiment_fake": -0.23,
+    "state": "West Virginia",
+    "rank": 36
+  },
+  {
+    "id": 10,
+    "sentiment_fake": -0.29,
+    "state": "Delaware",
+    "rank": 37
+  },
+  {
+    "id": 25,
+    "sentiment_fake": -0.38,
+    "state": "Massachusetts",
+    "rank": 38
+  },
+  {
+    "id": 41,
+    "sentiment_fake": -0.41,
+    "state": "Oregon",
+    "rank": 39
+  },
+  {
+    "id": 49,
+    "sentiment_fake": -0.41,
+    "state": "Utah",
+    "rank": 40
+  },
+  {
+    "id": 12,
+    "sentiment_fake": -0.47,
+    "state": "Florida",
+    "rank": 41
+  },
+  {
+    "id": 22,
+    "sentiment_fake": -0.51,
+    "state": "Louisiana",
+    "rank": 42
+  },
+  {
+    "id": 29,
+    "sentiment_fake": -0.53,
+    "state": "Missouri",
+    "rank": 43
+  },
+  {
+    "id": 51,
+    "sentiment_fake": -0.55,
+    "state": "Virginia",
+    "rank": 44
+  },
+  {
+    "id": 17,
+    "sentiment_fake": -0.56,
+    "state": "Illinois",
+    "rank": 45
+  },
+  {
+    "id": 9,
+    "sentiment_fake": -0.6,
+    "state": "Connecticut",
+    "rank": 46
+  },
+  {
+    "id": 40,
+    "sentiment_fake": -0.64,
+    "state": "Oklahoma",
+    "rank": 47
+  },
+  {
+    "id": 48,
+    "sentiment_fake": -0.72,
+    "state": "Texas",
+    "rank": 48
+  },
+  {
+    "id": 55,
+    "sentiment_fake": -0.79,
+    "state": "Wisconsin",
+    "rank": 49
+  },
+  {
+    "id": 37,
+    "sentiment_fake": -0.81,
+    "state": "North Carolina",
+    "rank": 50
+  },
+  {
+    "id": 45,
+    "sentiment_fake": -0.9,
+    "state": "South Carolina",
+    "rank": 51
+  },
+  {
+    "id": 36,
+    "sentiment_fake": -1,
+    "state": "New York",
+    "rank": 52
+  }
+]
